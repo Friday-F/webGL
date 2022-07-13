@@ -5,9 +5,6 @@
 </template>
 
 <script>
-
-// ## 材质，物料
-
 import * as THREE from 'three';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 // 动画库
@@ -98,31 +95,8 @@ export default {
 
       // 4. 创建以一个几何体
       const geometry = new THREE.BoxGeometry( 1, 1, 1 );
-
-
-      
-      //    物料的纹理
-      //    TextureLoader 导入图片 
-      const texture = new THREE.TextureLoader().load('https://static.s3.huazhifm.com/Object.access/umi-pic/MTY1NzYxNjU3OTc3Njc1OWQ2NGQyMjk0YWQ5NTc4NWNmZmExMWFjODlkY2FhLnBuZw==')
-      console.log(texture);
-
-      // 设置位移
-      // texture.offset.set(0.5,0.5)
-      // 纹理旋转
-      // Math.PI 是180
-      // 纹理旋转默认是左下角为0,0点进行宣传
-      // 更改旋转的中心点
-      // texture.center.set(0.5,0.5)
-      // texture.rotation = (Math.PI)
-
-      //  5. 几何体的物料
-      const material = new THREE.MeshBasicMaterial( {
-          color: '#fff',
-          map: texture,
-          transparent: true,
-          opacity: 0.6,
-        } 
-      );
+      // 5. 几何体的物料
+      const material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
 
       // 6. 根据几何体和材质创建物体
       const cube = new THREE.Mesh( geometry, material );

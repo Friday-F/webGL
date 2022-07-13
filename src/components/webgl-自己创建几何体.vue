@@ -6,7 +6,7 @@
 
 <script>
 
-// ## 材质，物料
+// 自己创建一个几何体
 
 import * as THREE from 'three';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
@@ -27,7 +27,6 @@ export default {
   },
   async mounted(){
     await this.init();
-    await this.initDat();
 
   },
   methods:{
@@ -96,41 +95,59 @@ export default {
       // 3. 相机添加到场景中
       scene.add(camera);
 
-      // 4. 创建以一个几何体
-      const geometry = new THREE.BoxGeometry( 1, 1, 1 );
+      // // 4. 创建以一个几何体
+      // const geometry = new THREE.BoxGeometry( 1, 1, 1 );
+      // // 5. 几何体的物料
+      // const material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
 
+      // // 6. 根据几何体和材质创建物体
+      // const cube = new THREE.Mesh( geometry, material );
 
-      
-      //    物料的纹理
-      //    TextureLoader 导入图片 
-      const texture = new THREE.TextureLoader().load('https://static.s3.huazhifm.com/Object.access/umi-pic/MTY1NzYxNjU3OTc3Njc1OWQ2NGQyMjk0YWQ5NTc4NWNmZmExMWFjODlkY2FhLnBuZw==')
-      console.log(texture);
+      // console.log(geometry)
 
-      // 设置位移
-      // texture.offset.set(0.5,0.5)
-      // 纹理旋转
-      // Math.PI 是180
-      // 纹理旋转默认是左下角为0,0点进行宣传
-      // 更改旋转的中心点
-      // texture.center.set(0.5,0.5)
-      // texture.rotation = (Math.PI)
+      // ###自定义创建一个几何体
+      // const geometry = new THREE.BufferGeometry();
+      // // 这是几何体的顶点的位置，创建了一个正方形
+      // const vertices = new Float32Array([
+      //   -1.0,-1.0,1.0,
+      //   1.0,-1.0,1.0,
+      //   1.0,1.0,1.0,
 
-      //  5. 几何体的物料
-      const material = new THREE.MeshBasicMaterial( {
-          color: '#fff',
-          map: texture,
-          transparent: true,
+      //   1.0,1.0,1.0,
+      //   -1.0,1.0,1.0,
+      //   -1.0,-1.0,1.0
+
+      // ])
+      // // 根据顶点的坐标设置的位置
+      // geometry.setAttribute('position',new THREE.BufferAttribute(vertices,3));
+      // const material = new THREE.MeshBasicMaterial({color:0xffff00})
+      // const mesh = new THREE.Mesh(geometry,material);
+      // scene.add(mesh)
+
+      //### 创建50个随机的三角形
+      for(let i = 0;i<50;i++){
+        let geometry = new THREE.BufferGeometry();
+        let verticesArray = new Float32Array(9);
+        // 每个三角形有三个顶点组成一个面，三个面所以是9
+        for(let j = 0;j<9;j++) {
+          verticesArray[j] = Math.random() * 10 - 5;
+        }
+        let color = new THREE.Color(Math.random(),Math.random(),Math.random())
+        geometry.setAttribute('position',new THREE.BufferAttribute(verticesArray,3));
+        // 创建物料
+        const material = new THREE.MeshBasicMaterial({
+          color,
           opacity: 0.6,
-        } 
-      );
+          transparent: true
 
-      // 6. 根据几何体和材质创建物体
-      const cube = new THREE.Mesh( geometry, material );
-
-      console.log(geometry)
+        });
+        const mesh = new THREE.Mesh(geometry,material);
+        scene.add(mesh);
+      } 
+      
 
       // 当前几何体对象
-      console.log(cube)
+      // console.log(cube)
 
       
 
@@ -153,7 +170,7 @@ export default {
 
 
       // 7. 几何体添加到场景中
-      scene.add(cube);
+      // scene.add(cube);
       
       // 8. 创建webgl
       const renderer = new THREE.WebGLRenderer();
@@ -181,41 +198,41 @@ export default {
         // gsap.to(目标，{duration: 时长，x: 位移的值, ease： 运动轨迹})
         // repeat: 重复次数，当-1时一直重复
         // yoyo: 如果为true，则每次重复播放都会前后交替进行。
-        let animation = gsap.to(
-          cube.position,
-          { 
-            duration: 5, 
-            x:5, 
-            ease: "circ.out",
-            repeat: 3,
-            yoyo: true,
-            onComplete(){
-              console.log('动画完成后的回调')
-            },
-            onStart(){
-              console.log('动画完开始时的回调')
-            }
-          }
-        )
-        gsap.to(
-          cube.rotation,
-          { 
-            duration: 5, 
-            x: 2 * Math.PI, 
-            ease: "circ.out"
-          }
-        )
+        // let animation = gsap.to(
+        //   cube.position,
+        //   { 
+        //     duration: 5, 
+        //     x:5, 
+        //     ease: "circ.out",
+        //     repeat: 3,
+        //     yoyo: true,
+        //     onComplete(){
+        //       console.log('动画完成后的回调')
+        //     },
+        //     onStart(){
+        //       console.log('动画完开始时的回调')
+        //     }
+        //   }
+        // )
+        // gsap.to(
+        //   cube.rotation,
+        //   { 
+        //     duration: 5, 
+        //     x: 2 * Math.PI, 
+        //     ease: "circ.out"
+        //   }
+        // )
 
-        document.body.addEventListener('dblclick',()=>{
-          // isActive() 是否正在运动
-          if(animation.isActive()){
-            // 暂停
-            animation.pause()
-          }else{
-            // 恢复
-            animation.resume()
-          }
-        })
+        // document.body.addEventListener('dblclick',()=>{
+        //   // isActive() 是否正在运动
+        //   if(animation.isActive()){
+        //     // 暂停
+        //     animation.pause()
+        //   }else{
+        //     // 恢复
+        //     animation.resume()
+        //   }
+        // })
 
 
         // 当旋转轨道时，进行渲染更新
@@ -264,7 +281,7 @@ export default {
 
 
         this.renderer = renderer;
-        this.cube = cube;
+        // this.cube = cube;
     }
   }
 }
