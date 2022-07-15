@@ -103,34 +103,64 @@ export default {
       
       //    物料的纹理
       //    TextureLoader 导入图片 
-      const texture = new THREE.TextureLoader().load('https://static.s3.huazhifm.com/Object.access/umi-pic/MTY1NzYxNjU3OTc3Njc1OWQ2NGQyMjk0YWQ5NTc4NWNmZmExMWFjODlkY2FhLnBuZw==')
+      const texture = new THREE.TextureLoader().load(require('../assets/men.jpeg'))
       console.log(texture);
 
-      // 设置位移
-      // texture.offset.set(0.5,0.5)
+      const bg = new THREE.TextureLoader().load(require('../assets/abc.jpeg'));
+      
+      const v = new THREE.TextureLoader().load(require('../assets/logo.png'))
+
+      // 1. 设置位移
+      // texture.offset.set(0.5,0)
       // 纹理旋转
       // Math.PI 是180
       // 纹理旋转默认是左下角为0,0点进行宣传
-      // 更改旋转的中心点
+      // 2. 更改旋转的中心点
       // texture.center.set(0.5,0.5)
+      // 3. 纹理旋转
       // texture.rotation = (Math.PI)
 
       //  5. 几何体的物料
       const material = new THREE.MeshBasicMaterial( {
           color: '#fff',
           map: texture,
+          alphaMap: bg, // alphaMap： 设置透明，黑色：完全透明；白色：完全不透明
           transparent: true,
-          opacity: 0.6,
+          // opacity: 0.6,
+          side: THREE.DoubleSide, // 定义将要渲染哪一面 - 正面，背面或两者。 默认为THREE.FrontSide。其他选项有THREE.BackSide和THREE.DoubleSide(前后都渲染)。
+          aoMap: v,  // 用作环境遮挡贴图。默认值为null。aoMap需要第二组UV
+          aoMapIntensity: 1 // 环境遮挡效果的强度。默认值为1。零是不遮挡效果。
         } 
       );
 
       // 6. 根据几何体和材质创建物体
       const cube = new THREE.Mesh( geometry, material );
 
+      //  aoMap需要第二组UV   设置这个就是为了有遮挡效果，例如：门的缝隙是黑色的
+      geometry.setAttribute('uv2',
+        new THREE.BufferAttribute(geometry.attributes.uv.array,2)
+      )
+
       console.log(geometry)
 
       // 当前几何体对象
       console.log(cube)
+
+
+      // 创建一个平面
+      const planeGeometry = new THREE.PlaneGeometry(1,1);
+
+      const cubePlane = new THREE.Mesh(planeGeometry, material);
+
+      // aoMap需要第二组UV 设置这个就是为了有遮挡效果，例如：门的缝隙是黑色的
+      planeGeometry.setAttribute('uv2',
+        new THREE.BufferAttribute(planeGeometry.attributes.uv.array,2)
+      )
+
+
+
+      cubePlane.position.set(0,2,0)
+      scene.add(cubePlane)
 
       
 
